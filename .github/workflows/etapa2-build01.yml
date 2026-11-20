@@ -1,0 +1,30 @@
+name: Etapa 2 - Build V1 (job único)
+
+# Alternativa 1: todas as etapas em um único job, executadas em sequência no mesmo runner
+on:
+  push:
+    branches: [main]
+    paths:
+      - "etapa2-projeto-pronto/**"
+      - ".github/workflows/etapa2-*.yml"
+
+defaults:
+  run:
+    working-directory: etapa2-projeto-pronto
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v5
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test code
+        run: npm run test
+      - name: Build code
+        run: npm run build
+      - name: Deploy code
+        run: echo "Deploying..."
