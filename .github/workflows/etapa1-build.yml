@@ -1,0 +1,43 @@
+name: Etapa 1 - Build e Execução (projeto local)
+
+# Roda a cada push na main que altere o projeto da etapa 1 (ou este arquivo)
+on:
+  push:
+    branches: [main]
+    paths:
+      - "etapa1-projeto-local/**"
+      - ".github/workflows/etapa1-build.yml"
+  workflow_dispatch:
+
+# Os comandos "run" executam dentro da pasta do projeto
+defaults:
+  run:
+    working-directory: etapa1-projeto-local
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v5
+
+      - name: Configuração do ambiente (Node.js 22)
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: etapa1-projeto-local/package-lock.json
+
+      - name: Versões do ambiente
+        run: |
+          node -v
+          npm -v
+
+      - name: Instalação das dependências
+        run: npm ci
+
+      - name: Build (compilação do TypeScript)
+        run: npm run build
+
+      - name: Execução
+        run: npm start
